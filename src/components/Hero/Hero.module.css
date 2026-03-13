@@ -222,10 +222,16 @@
 
     .hero {
         padding-top: 140px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .grid {
-        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
         text-align: center;
         gap: 4rem;
     }
@@ -235,12 +241,15 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
+        margin-bottom: 2rem;
     }
 
     .subtitle {
         margin-left: auto;
         margin-right: auto;
         font-size: 1.15rem;
+        max-width: 90%;
     }
 
     .actions {
@@ -258,68 +267,75 @@
 @media (max-width: 640px) {
     .hero {
         padding-top: 100px;
-        padding-bottom: 60px;
+        padding-bottom: 40px;
     }
 
-    .title {
-        font-size: clamp(2.25rem, 12vw, 3rem);
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.5rem 1rem;
         margin-bottom: 1.5rem;
     }
 
+    .title {
+        font-size: 2.25rem;
+        line-height: 1.1;
+        margin-bottom: 1.25rem;
+        width: 100%;
+    }
+
     .subtitle {
-        font-size: 1rem;
+        font-size: 0.95rem;
         margin-bottom: 2.5rem;
-        padding: 0 0.5rem;
+        padding: 0;
+        line-height: 1.6;
     }
 
     .actions {
         flex-direction: column;
+        align-items: center;
         width: 100%;
-        gap: 0.75rem;
-        padding: 0 1rem;
+        gap: 0.8rem;
+        padding: 0 1.5rem;
     }
 
     .primaryBtn,
     .secondaryBtn {
         width: 100%;
+        max-width: 320px;
         justify-content: center;
-        padding: 0.9rem 1.8rem;
+        padding: 0.9rem 1.5rem;
         font-size: 1rem;
+        border-radius: 12px;
     }
 
-    .insightCard {
-        padding: 0.75rem;
-        border-radius: 14px;
-        gap: 0.5rem;
-    }
-
-    .cardTop {
-        font-size: 0.7rem;
-    }
-
-    .cardValue {
-        font-size: 1rem;
+    .visualContent {
+        margin-top: 2rem;
+        transform: scale(0.8);
+        width: 100%;
+        display: flex;
+        justify-content: center;
     }
 
     .focusPattern {
         width: 140px;
-        top: -2%;
-        left: -8%;
+        top: -10%;
+        left: -5%;
     }
 
     .appSwitch {
         width: 130px;
-        top: 35%;
-        right: -12%;
+        top: 30%;
+        right: -10%;
     }
 
     .attentionScore {
-        width: 160px;
-        bottom: -2%;
+        width: 150px;
+        bottom: -10%;
         left: 0%;
     }
 
     .illustration {
-        max-width: 280px;
+        max-width: 260px;
+        margin: 0 auto;
     }
 }
