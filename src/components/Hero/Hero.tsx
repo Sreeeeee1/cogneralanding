@@ -68,7 +68,7 @@ export default function Hero() {
                             className={styles.title}
                         >
                             Privacy-First <br />
-                            <span>Digital Analytics</span>
+                            <span>Behavioral Intelligence</span>
                         </motion.h1>
 
                         <motion.p
