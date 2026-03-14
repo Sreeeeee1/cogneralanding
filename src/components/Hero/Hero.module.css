@@ -393,35 +393,41 @@
     }
 
     .visualContent {
-        margin-top: 2rem;
-        transform: scale(0.75);
+        margin-top: 3rem;
         width: 100%;
         display: flex;
         justify-content: center;
         perspective: 1000px;
+        min-height: 400px; /* Ensure space for cards */
     }
 
     .velocityMonitor {
-        width: 160px;
-        top: -15%;
-        left: -10%;
+        width: 180px;
+        top: 0;
+        left: 5%;
+        transform: scale(0.85);
     }
 
     .intentRadar {
-        width: 140px;
-        top: 25%;
-        right: -15%;
+        width: 160px;
+        top: 30%;
+        right: 5%;
+        transform: scale(0.85);
     }
 
     .privacyShield {
-        width: 180px;
-        bottom: -15%;
-        left: -5%;
-        padding: 1rem;
+        width: 220px;
+        bottom: 5%;
+        left: 50%;
+        transform: translateX(-50%) scale(0.9);
+        padding: 1.25rem;
+        z-index: 10;
     }
 
     .illustration {
-        max-width: 240px;
+        max-width: 320px;
+        width: 100%;
         margin: 0 auto;
+        position: relative;
     }
 }
