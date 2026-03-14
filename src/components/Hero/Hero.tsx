@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './Hero.module.css';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ArrowRight, Play, Eye, MousePointer, Activity, Zap } from 'lucide-react';
+import { motion, useMotionValue, useSpring, useTransform, useVelocity, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Play, MousePointer, Activity, Zap, ShieldCheck, Lock, Fingerprint } from 'lucide-react';
 
 export default function Hero() {
+    const containerRef = useRef<HTMLDivElement>(null);
+    
     // Mouse Parallax Effect
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
@@ -14,11 +16,20 @@ export default function Hero() {
     const springX = useSpring(mouseX, springConfig);
     const springY = useSpring(mouseY, springConfig);
 
+    // Velocity for the Sparkline
+    const xVelocity = useVelocity(mouseX);
+    const yVelocity = useVelocity(mouseY);
+    const combinedVelocity = useTransform([xVelocity, yVelocity], ([x, y]) => {
+        return Math.min(Math.sqrt(Math.pow(Number(x), 2) + Math.pow(Number(y), 2)) * 0.5, 100);
+    });
+    const smoothedVelocity = useSpring(combinedVelocity, { damping: 50, stiffness: 400 });
+
     const rotateX = useTransform(springY, [-0.5, 0.5], [10, -10]);
     const rotateY = useTransform(springX, [-0.5, 0.5], [-10, 10]);
 
     const handleMouseMove = (event: React.MouseEvent) => {
-        const rect = event.currentTarget.getBoundingClientRect();
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
         const x = (event.clientX - rect.left) / rect.width - 0.5;
         const y = (event.clientY - rect.top) / rect.height - 0.5;
         mouseX.set(x);
@@ -26,7 +37,7 @@ export default function Hero() {
     };
 
     return (
-        <section className={styles.hero} onMouseMove={handleMouseMove}>
+        <section className={styles.hero} onMouseMove={handleMouseMove} ref={containerRef}>
             {/* Animated Background Blobs */}
             <div className={styles.blobContainer}>
                 <motion.div
@@ -121,77 +132,129 @@ export default function Hero() {
                         transition={{ duration: 1.2, ease: "easeOut" }}
                     >
                         <div className={styles.illustration}>
-                            {/* Focus Pattern Card */}
+                            {/* Card 1: Velocity Monitor */}
                             <motion.div 
-                                className={`${styles.insightCard} ${styles.focusPattern}`}
-                                animate={{ y: [0, -10, 0] }}
-                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                className={`${styles.insightCard} ${styles.velocityMonitor}`}
+                                style={{
+                                    y: useTransform(springY, [-0.5, 0.5], [-20, 20])
+                                }}
                             >
                                 <div className={styles.cardTop}>
-                                    <div className={`${styles.cardIcon}`} style={{ background: 'rgba(14, 165, 164, 0.1)', color: '#0EA5A4' }}>
-                                        <MousePointer size={16} />
-                                    </div>
-                                    Focus Pattern
-                                </div>
-                                <div className={styles.cardValue}>High Precision</div>
-                                <div className={styles.miniChart}>
-                                    {[0.4, 0.7, 0.5, 0.9, 0.6, 0.8].map((op, i) => (
-                                        <div key={i} className={styles.bar} style={{ opacity: op }} />
-                                    ))}
-                                </div>
-                            </motion.div>
-
-                            {/* Application Switch Card */}
-                            <motion.div 
-                                className={`${styles.insightCard} ${styles.appSwitch}`}
-                                animate={{ y: [0, 10, 0] }}
-                                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                            >
-                                <div className={styles.cardTop}>
-                                    <div className={`${styles.cardIcon}`} style={{ background: 'rgba(249, 115, 22, 0.1)', color: '#F97316' }}>
+                                    <div className={styles.cardIcon} style={{ background: 'rgba(217, 178, 79, 0.1)', color: 'var(--primary)' }}>
                                         <Activity size={16} />
                                     </div>
-                                    App Context
+                                    Velocity Monitor
                                 </div>
-                                <div className={styles.cardValue}>Active Switch</div>
-                                <div className={styles.miniChart}>
-                                    {[0.3, 0.5, 0.8, 0.4, 0.9].map((op, i) => (
-                                        <div key={i} className={styles.bar} style={{ opacity: op, background: i === 2 ? '#F97316' : undefined }} />
-                                    ))}
+                                <div className={styles.velocityValue}>
+                                    <motion.span>{useTransform(smoothedVelocity, v => Math.round(v))}</motion.span>
+                                    <small>px/s</small>
+                                </div>
+                                <div className={styles.sparkline}>
+                                    <svg viewBox="0 0 100 30" preserveAspectRatio="none">
+                                        <motion.path
+                                            fill="none"
+                                            stroke="var(--primary)"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            d="M0 15 Q 10 5, 20 15 T 40 15 T 60 15 T 80 15 T 100 15"
+                                            animate={{
+                                                d: [
+                                                    "M0 15 Q 10 5, 20 15 T 40 15 T 60 15 T 80 15 T 100 15",
+                                                    "M0 15 Q 10 25, 20 15 T 40 15 T 60 15 T 80 15 T 100 15",
+                                                    "M0 15 Q 10 5, 20 15 T 40 15 T 60 15 T 80 15 T 100 15"
+                                                ]
+                                            }}
+                                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                                            style={{
+                                                opacity: useTransform(smoothedVelocity, [0, 100], [0.3, 1])
+                                            }}
+                                        />
+                                    </svg>
                                 </div>
                             </motion.div>
 
-                            {/* Attention Score Card */}
+                            {/* Card 2: Intent Radar */}
                             <motion.div 
-                                className={`${styles.insightCard} ${styles.attentionScore}`}
-                                animate={{ y: [0, -8, 0] }}
-                                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                                className={`${styles.insightCard} ${styles.intentRadar}`}
+                                style={{
+                                    x: useTransform(springX, [-0.5, 0.5], [20, -20])
+                                }}
                             >
                                 <div className={styles.cardTop}>
-                                    <div className={`${styles.cardIcon}`} style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#22C55E' }}>
-                                        <Zap size={16} />
+                                    <div className={styles.cardIcon} style={{ background: 'rgba(14, 165, 164, 0.1)', color: '#0EA5A4' }}>
+                                        <Fingerprint size={16} />
                                     </div>
-                                    Attention Score
+                                    Intent Radar
                                 </div>
-                                <div className={styles.cardValue}>94.2% Peak</div>
-                                <div className={styles.miniChart} style={{ height: '40px' }}>
-                                    {[30, 50, 40, 70, 90, 85, 95].map((h, i) => (
-                                        <div key={i} className={`${styles.bar} ${i > 4 ? styles.activeBar : ''}`} style={{ height: `${h}%` }} />
+                                <div className={styles.radarGrid}>
+                                    {[...Array(9)].map((_, i) => (
+                                        <motion.div 
+                                            key={i} 
+                                            className={styles.radarNode}
+                                            animate={{
+                                                scale: [1, 1.2, 1],
+                                                opacity: [0.2, 0.5, 0.2]
+                                            }}
+                                            transition={{ 
+                                                duration: 2, 
+                                                repeat: Infinity, 
+                                                delay: i * 0.1 
+                                            }}
+                                        />
                                     ))}
+                                    <motion.div 
+                                        className={styles.radarPointer}
+                                        style={{
+                                            x: useTransform(springX, [-0.5, 0.5], [-30, 30]),
+                                            y: useTransform(springY, [-0.5, 0.5], [-30, 30])
+                                        }}
+                                    />
+                                </div>
+                            </motion.div>
+
+                            {/* Card 3: Privacy Shield (3D Style) */}
+                            <motion.div 
+                                className={`${styles.insightCard} ${styles.privacyShield}`}
+                                whileHover={{ scale: 1.05 }}
+                            >
+                                <div className={styles.shieldWrapper}>
+                                    <motion.div 
+                                        className={styles.shieldIcon}
+                                        animate={{ rotateY: [0, 15, -15, 0] }}
+                                        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                                    >
+                                        <ShieldCheck size={48} strokeWidth={1} />
+                                        <motion.div 
+                                            className={styles.shieldGlow}
+                                            animate={{ opacity: [0.3, 0.6, 0.3] }}
+                                            transition={{ duration: 2, repeat: Infinity }}
+                                        />
+                                    </motion.div>
+                                    <div className={styles.shieldContent}>
+                                        <h3>100% Anonymized</h3>
+                                        <p>Zero PII Data Stored</p>
+                                    </div>
+                                </div>
+                                <div className={styles.securityTag}>
+                                    <Lock size={12} />
+                                    SOC2 COMPLIANT
                                 </div>
                             </motion.div>
 
                             {/* Center Visual/Data Lines */}
                             <svg width="100%" height="100%" viewBox="0 0 400 400" className={styles.dataLines}>
                                 <motion.circle 
-                                    cx="200" cy="200" r="120" 
-                                    fill="none" stroke="rgba(14, 165, 164, 0.1)" strokeWidth="1" strokeDasharray="5,5"
-                                    animate={{ rotate: 360 }}
-                                    transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                                    cx="200" cy="200" r="100" 
+                                    fill="none" stroke="rgba(217, 178, 79, 0.05)" strokeWidth="1"
+                                    animate={{ 
+                                        r: [100, 140],
+                                        opacity: [1, 0]
+                                    }}
+                                    transition={{ duration: 4, repeat: Infinity, ease: "easeOut" }}
                                 />
                                 <motion.circle 
                                     cx="200" cy="200" r="160" 
-                                    fill="none" stroke="rgba(34, 197, 94, 0.1)" strokeWidth="1" strokeDasharray="10,5"
+                                    fill="none" stroke="rgba(14, 165, 164, 0.05)" strokeWidth="1" strokeDasharray="10,5"
                                     animate={{ rotate: -360 }}
                                     transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
                                 />
