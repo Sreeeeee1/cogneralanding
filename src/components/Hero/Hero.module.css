@@ -393,41 +393,46 @@
     }
 
     .visualContent {
-        margin-top: 3rem;
+        margin-top: 4rem;
         width: 100%;
         display: flex;
         justify-content: center;
         perspective: 1000px;
-        min-height: 400px; /* Ensure space for cards */
-    }
-
-    .velocityMonitor {
-        width: 180px;
-        top: 0;
-        left: 5%;
-        transform: scale(0.85);
-    }
-
-    .intentRadar {
-        width: 160px;
-        top: 30%;
-        right: 5%;
-        transform: scale(0.85);
-    }
-
-    .privacyShield {
-        width: 220px;
-        bottom: 5%;
-        left: 50%;
-        transform: translateX(-50%) scale(0.9);
-        padding: 1.25rem;
-        z-index: 10;
+        height: auto;
+        min-height: auto;
     }
 
     .illustration {
-        max-width: 320px;
+        max-width: 100%;
         width: 100%;
+        height: auto;
+        aspect-ratio: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .insightCard {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: 90% !important;
+        max-width: 340px !important;
+        transform: scale(1) !important;
         margin: 0 auto;
-        position: relative;
+    }
+
+    .velocityMonitor, 
+    .intentRadar, 
+    .privacyShield {
+        position: relative !important;
+    }
+
+    /* Hide background lines on mobile for clarity */
+    .dataLines {
+        display: none;
     }
 }
