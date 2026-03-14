@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 
 export default function Footer() {
     return (
-        <motion.footer 
+        <motion.footer
             className={styles.footer}
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -25,7 +25,7 @@ export default function Footer() {
                             Privacy-first behavioral intelligence engine helping digital teams see the unseen context.
                         </p>
                     </div>
-                    
+
                     <div className={styles.linksGrid}>
                         <div className={styles.linkGroup}>
                             <h4 className={styles.groupTitle}>Product</h4>
@@ -33,13 +33,13 @@ export default function Footer() {
                             <Link href="#solution" className={styles.link}>Solution</Link>
                             <Link href="#use-cases" className={styles.link}>Use Cases</Link>
                         </div>
-                        
+
                         <div className={styles.linkGroup}>
                             <h4 className={styles.groupTitle}>Founder</h4>
-                            <span className={styles.info}>Utkarsh Planchiwar</span>
+                            <span className={styles.info}>Ravi Kumar Samineni</span>
                             <Link href="mailto:founder@cognera.com" className={styles.link}>Contact Founder</Link>
                         </div>
-                        
+
                         <div className={styles.linkGroup}>
                             <h4 className={styles.groupTitle}>Social</h4>
                             <div className={styles.social}>
@@ -50,7 +50,7 @@ export default function Footer() {
                         </div>
                     </div>
                 </div>
-                
+
                 <div className={styles.bottom}>
                     <p className={styles.copyright}>
                         &copy; {new Date().getFullYear()} Cognera. Designed for the Future.
